@@ -85,8 +85,26 @@ RUN apt-get update -qq \
     && chmod 777 -R /usr/local/fsl/bin \
     && chown -R dpisner:dpisner /usr/local/fsl
 
-USER dpisner
-WORKDIR /home/dpisner
+#Neurolibre specific configurations : https://mybinder.readthedocs.io/en/latest/tutorials/dockerfile.html
+RUN pip install --no-cache-dir notebook==5.*
+
+ARG NB_USER=jovyan
+ARG NB_UID=1000
+ENV USER ${NB_USER}
+ENV NB_UID ${NB_UID}
+ENV HOME /home/${NB_USER}
+
+RUN adduser --disabled-password \
+    --gecos "Default user" \
+    --uid ${NB_UID} \
+    ${NB_USER}
+    
+# Make sure the contents of our repo are in ${HOME}
+COPY . ${HOME}
+USER root
+RUN chown -R ${NB_UID} ${HOME}
+USER ${NB_USER}
+WORKDIR /home/${NB_USER}
 
 # Install Miniconda, python, and basic packages.
 ARG miniconda_version="4.3.27"
@@ -164,7 +182,7 @@ RUN chmod a+s -R /opt \
     && mkdir /working && \
     chmod -R 777 /working
 
-USER dpisner
+USER ${NB_USER}
 
 # ENV Config
 ENV LD_LIBRARY_PATH="/opt/conda/lib":$LD_LIBRARY_PATH
