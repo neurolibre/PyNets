@@ -8,6 +8,17 @@ ARG DEBIAN_FRONTEND="noninteractive"
 ENV LANG="C.UTF-8" \
     LC_ALL="C.UTF-8"
 
+ARG NB_USER=jovyan
+ARG NB_UID=1000
+ENV USER ${NB_USER}
+ENV NB_UID ${NB_UID}
+ENV HOME /home/${NB_USER}
+
+RUN adduser --disabled-password \
+    --gecos "Default user" \
+    --uid ${NB_UID} \
+    ${NB_USER}
+
 RUN apt-get update -qq \
     && apt-get install -y --no-install-recommends software-properties-common \
     # Install system dependencies.
@@ -66,7 +77,7 @@ RUN apt-get update -qq \
     && curl -o /tmp/libxp6.deb -sSL http://mirrors.kernel.org/debian/pool/main/libx/libxp/libxp6_1.0.2-2_amd64.deb \
     && dpkg -i /tmp/libxp6.deb && rm -f /tmp/libxp6.deb \
     # Add new user.
-    && groupadd -r dpisner && useradd --no-log-init --create-home --shell /bin/bash -r -g dpisner dpisner \
+    && groupadd -r ${NB_USER} \
     && chmod a+s /opt \
     && chmod 777 -R /opt \
     && apt-get clean -y && apt-get autoclean -y && apt-get autoremove -y \
@@ -83,26 +94,8 @@ RUN apt-get update -qq \
        --exclude='fsl/bin/*_gpu*' \
        --exclude='fsl/bin/*_cuda*' \
     && chmod 777 -R /usr/local/fsl/bin \
-    && chown -R dpisner:dpisner /usr/local/fsl
-
-ARG NB_USER=jovyan
-ARG NB_UID=1000
-ENV USER ${NB_USER}
-ENV NB_UID ${NB_UID}
-ENV HOME /home/${NB_USER}
-
-RUN adduser --disabled-password \
-    --gecos "Default user" \
-    --uid ${NB_UID} \
-    ${NB_USER}
-    
-# Make sure the contents of our repo are in ${HOME}
-COPY . ${HOME}
-USER root
-RUN chown -R ${NB_UID} ${HOME}
-USER ${NB_USER}
-WORKDIR /home/${NB_USER}
-
+    && chown -R ${NB_USER}:${NB_USER} /usr/local/fsl
+  
 # Install Miniconda, python, and basic packages.
 ARG miniconda_version="4.3.27"
 ENV PATH="/opt/conda/bin":$PATH
@@ -183,7 +176,12 @@ RUN chmod a+s -R /opt \
     && mkdir /working && \
     chmod -R 777 /working
 
+# Make sure the contents of the repo are in ${HOME}
+COPY . ${HOME}
+USER root
+RUN chown -R ${NB_UID} ${HOME}
 USER ${NB_USER}
+WORKDIR /home/${NB_USER}
 
 # ENV Config
 ENV LD_LIBRARY_PATH="/opt/conda/lib":$LD_LIBRARY_PATH
