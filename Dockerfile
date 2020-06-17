@@ -151,11 +151,11 @@ USER root
 RUN pip install --no-cache-dir notebook==5.*
 
 RUN chmod a+s -R /opt \
-    && chown -R dpisner /opt/conda/lib/python3.6/site-packages \
+    && chown -R ${NB_USER} /opt/conda/lib/python3.6/site-packages \
     && mkdir -p /home/${NB_USER}/.pynets \
-    && chown -R dpisner /${NB_USER}/dpisner/.pynets \
+    && chown -R ${NB_USER} /home/${NB_USER}/.pynets \
     && chmod 777 /opt/conda/bin/pynets \
-    && chmod 777 -R /${NB_USER}/dpisner/.pynets \
+    && chmod 777 -R /home/${NB_USER}/.pynets \
     && chmod 777 /opt/conda/bin/pynets \
     && chmod 777 /opt/conda/bin/pynets_bids \
     && chmod 777 /opt/conda/bin/pynets_collect \
