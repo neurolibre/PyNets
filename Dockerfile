@@ -1,5 +1,7 @@
 FROM dpys/pynets:latest
 
+USER root
+
 # Binder requirements
 RUN pip install --no-cache --upgrade pip && \
     pip install --no-cache notebook
