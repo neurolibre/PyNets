@@ -85,9 +85,6 @@ RUN apt-get update -qq \
     && chmod 777 -R /usr/local/fsl/bin \
     && chown -R dpisner:dpisner /usr/local/fsl
 
-#Neurolibre specific configurations : https://mybinder.readthedocs.io/en/latest/tutorials/dockerfile.html
-RUN pip install --no-cache-dir notebook==5.*
-
 ARG NB_USER=jovyan
 ARG NB_UID=1000
 ENV USER ${NB_USER}
@@ -149,6 +146,10 @@ RUN curl -sSLO https://repo.continuum.io/miniconda/Miniconda3-${miniconda_versio
 
 # Handle permissions, cleanup, and create mountpoints
 USER root
+
+#Neurolibre specific configurations : https://mybinder.readthedocs.io/en/latest/tutorials/dockerfile.html
+RUN pip install --no-cache-dir notebook==5.*
+
 RUN chmod a+s -R /opt \
     && chown -R dpisner /opt/conda/lib/python3.6/site-packages \
     && mkdir -p /home/dpisner/.pynets \
