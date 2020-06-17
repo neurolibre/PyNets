@@ -118,8 +118,8 @@ RUN curl -sSLO https://repo.continuum.io/miniconda/Miniconda3-${miniconda_versio
     && rm -rf Miniconda3-${miniconda_version}-Linux-x86_64.sh \
     && pip install numpy requests psutil sqlalchemy \
     # Install pynets
-    && git clone -b development https://github.com/dPys/PyNets /home/dpisner/PyNets && \
-    cd /home/dpisner/PyNets && \
+    && git clone -b development https://github.com/dPys/PyNets /home/${NB_USER}/PyNets && \
+    cd /home/${NB_USER}/PyNets && \
     pip install -r requirements.txt && \
     python setup.py install \
     # Install skggm
@@ -141,8 +141,8 @@ RUN curl -sSLO https://repo.continuum.io/miniconda/Miniconda3-${miniconda_versio
     && echo "enabled = true" >> ~/.nipype/nipype.cfg \
     && pip uninstall -y pandas \
     && pip install pandas -U \
-    && rm -rf /home/dpisner/PyNets \
-    && rm -rf /home/dpisner/.cache
+    && rm -rf /home/${NB_USER}/PyNets \
+    && rm -rf /home/${NB_USER}/.cache
 
 # Handle permissions, cleanup, and create mountpoints
 USER root
@@ -152,10 +152,10 @@ RUN pip install --no-cache-dir notebook==5.*
 
 RUN chmod a+s -R /opt \
     && chown -R dpisner /opt/conda/lib/python3.6/site-packages \
-    && mkdir -p /home/dpisner/.pynets \
-    && chown -R dpisner /home/dpisner/.pynets \
+    && mkdir -p /home/${NB_USER}/.pynets \
+    && chown -R dpisner /${NB_USER}/dpisner/.pynets \
     && chmod 777 /opt/conda/bin/pynets \
-    && chmod 777 -R /home/dpisner/.pynets \
+    && chmod 777 -R /${NB_USER}/dpisner/.pynets \
     && chmod 777 /opt/conda/bin/pynets \
     && chmod 777 /opt/conda/bin/pynets_bids \
     && chmod 777 /opt/conda/bin/pynets_collect \
