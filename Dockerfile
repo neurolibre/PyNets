@@ -19,8 +19,8 @@ RUN apt-get update -qq \
 
 # Make sure the contents of the repo are in ${HOME}
 COPY . ${HOME}
-RUN chown -R ${NB_UID} ${HOME}
-RUN chgrp -R ${NB_UID} ${HOME}
+RUN chown -R ${NB_USER} ${HOME}
+RUN chgrp -R ${NB_USER} ${HOME}
 WORKDIR /home/${NB_USER}
 USER ${NB_USER}
 
