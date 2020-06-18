@@ -17,8 +17,8 @@ RUN apt-get update -qq \
         wget
 RUN wget -O- http://neuro.debian.net/lists/bionic.us-ca.full | tee /etc/apt/sources.list.d/neurodebian.sources.list
 RUN apt-key adv --recv-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9 \
-    && apt-get update
-RUN apt-get install fsl-complete
+RUN apt-get update
+    && apt-get install fsl-complete
 
 # Make sure the contents of the repo are in ${HOME}
 COPY . ${HOME}
