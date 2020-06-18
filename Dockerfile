@@ -11,14 +11,11 @@ RUN useradd -ms /bin/bash ${NB_USER}
 
 #fsl
 RUN apt-get update -qq \
-    && apt-get install -y --no-install-recommends software-properties-common \
-    # Install system dependencies.
-    && apt-get install -y --no-install-recommends \
-        wget
+    && apt-get install -y --no-install-recommends wget
 RUN wget -O- http://neuro.debian.net/lists/bionic.us-ca.full | tee /etc/apt/sources.list.d/neurodebian.sources.list
 RUN apt-key adv --recv-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9
-RUN apt-get update \
-    && apt-get install fsl-complete
+RUN apt-get update -qq \
+    && apt-get install -y --no-install-recommends fsl-complete
 
 # Make sure the contents of the repo are in ${HOME}
 COPY . ${HOME}
