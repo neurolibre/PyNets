@@ -7,10 +7,7 @@ ENV USER ${NB_USER}
 ENV HOME /home/${NB_USER}
 
 USER root
-RUN adduser --disabled-password \
-    --gecos "Default user" \
-    --uid ${NB_UID} \
-    ${NB_USER}
+RUN useradd -ms /bin/bash ${NB_USER}
 
 #fsl
 RUN wget -O- http://neuro.debian.net/lists/bionic.us-ca.full | sudo tee /etc/apt/sources.list.d/neurodebian.sources.list
