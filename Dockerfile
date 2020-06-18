@@ -15,7 +15,7 @@ RUN adduser --disabled-password \
 
 #fsl
 RUN wget -O- http://neuro.debian.net/lists/bionic.us-ca.full | sudo tee /etc/apt/sources.list.d/neurodebian.sources.list
-RUN apt-key adv --recv-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9
+RUN apt-key adv --recv-keys --keyserver hkp://pool.sks-keyservers.net:80 0xA5D32F012649A5A9 \
     && apt-get update
 RUN apt-get install fsl-complete
 
@@ -26,14 +26,15 @@ RUN chgrp -R ${NB_UID} ${HOME}
 WORKDIR /home/${NB_USER}
 USER ${NB_USER}
 
-RUN pip install --no-cache --upgrade pip && \
-    pip install --no-cache notebook==5.*
+RUN pip install --no-cache --upgrade pip \
+    &&  pip install --no-cache notebook==5.*
 
 #pynets
-RUN git clone -b development https://github.com/dPys/PyNets /home/${NB_USER}/PyNets && \
-    cd /home/${NB_USER}/PyNets && \
-    pip install -r requirements.txt && \
-    python setup.py install
+RUN git clone -b development https://github.com/dPys/PyNets /home/${NB_USER}/PyNets \
+    && cd /home/${NB_USER}/PyNets \
+    && pip install -r requirements.txt \
+    && python setup.py install
+    
 # Create nipype config for resource monitoring
 RUN mkdir -p /home/${NB_USER}/.nipype \
     && echo "[monitoring]" > /home/${NB_USER}/.nipype/nipype.cfg \
