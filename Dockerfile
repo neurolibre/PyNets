@@ -22,7 +22,6 @@ COPY . ${HOME}
 RUN chown -R ${NB_USER} ${HOME}
 RUN chgrp -R ${NB_USER} ${HOME}
 WORKDIR /home/${NB_USER}
-USER ${NB_USER}
 
 RUN pip install --no-cache --upgrade pip \
     &&  pip install --no-cache notebook==5.*
@@ -47,6 +46,10 @@ ENV LD_LIBRARY_PATH="/usr/lib/openblas-base":$LD_LIBRARY_PATH
 ENV PYTHONWARNINGS ignore
 ENV OMP_NUM_THREADS=1
 ENV USE_SIMPLE_THREADED_LEVEL3=1
+
+USER ${NB_USER}
+RUN chown -R ${NB_USER} ${HOME}
+RUN chgrp -R ${NB_USER} ${HOME}
 
 #Disabling entrypoints
 ENTRYPOINT []
