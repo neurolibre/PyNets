@@ -2,7 +2,7 @@ FROM nipype/nipype:py36
 
 # BinderHub requirements
 ARG NB_USER=jovyan
-ARG NB_UID=1001
+ARG NB_UID=999
 ENV USER ${NB_USER}
 ENV NB_UID ${NB_UID}
 ENV HOME /home/${NB_USER}
